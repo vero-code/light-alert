@@ -52,15 +52,31 @@ public class MainActivity extends AppCompatActivity {
         WebScheduleLoader.loadSchedule(new WebScheduleLoader.ScheduleCallback() {
             @Override
             public void onLoaded(String todayData, String tomorrowData) {
-
                 runOnUiThread(() -> {
+                    if (todayData == null) return;
+                    String[] daysArray = getResources().getStringArray(R.array.days_of_week);
 
-                    Log.d("LightAlert", "Today: " + todayData);
-                    Log.d("LightAlert", "Tomorrow: " + tomorrowData);
+                    Calendar calendar = Calendar.getInstance();
 
-                    Toast.makeText(MainActivity.this,
-                            "Data received!\nToday: " + todayData,
-                            Toast.LENGTH_LONG).show();
+                    int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+                    int todayIndex = (dayOfWeek + 5) % 7;
+                    int tomorrowIndex = (todayIndex + 1) % 7;
+
+                    String todayName = daysArray[todayIndex];
+                    String tomorrowName = daysArray[tomorrowIndex];
+
+                    schedule.updateDaySchedule(todayName, todayData);
+
+                    if (tomorrowData != null) {
+                        schedule.updateDaySchedule(tomorrowName, tomorrowData);
+                    }
+
+                    viewPager.setAdapter(null);
+                    setupViewPager();
+
+                    viewPager.setCurrentItem(todayIndex, false);
+
+                    Toast.makeText(MainActivity.this, "Schedule updated!", Toast.LENGTH_SHORT).show();
                 });
             }
 
@@ -68,7 +84,6 @@ public class MainActivity extends AppCompatActivity {
             public void onError(String error) {
                 runOnUiThread(() -> {
                     Log.e("LightAlert", "Error: " + error);
-                    Toast.makeText(MainActivity.this, "Error: " + error, Toast.LENGTH_LONG).show();
                 });
             }
         });

@@ -54,8 +54,12 @@ public class HourAdapter extends BaseAdapter {
         if (status != null) {
             String[] states = status.split(",\\s*");
             int colorTop = getColorByStatus(states[0]);
-            int colorBottom = getColorByStatus(states[1]);
-
+            int colorBottom;
+            if (states.length > 1) {
+                colorBottom = getColorByStatus(states[1]);
+            } else {
+                colorBottom = colorTop;
+            }
             topIndicator.setBackgroundColor(colorTop);
             bottomIndicator.setBackgroundColor(colorBottom);
         } else {
@@ -67,15 +71,24 @@ public class HourAdapter extends BaseAdapter {
     }
 
     private int getColorByStatus(String status) {
-        switch (status.trim().toLowerCase()) {
-            case "light":
-                return Color.parseColor("#00FF00");
-            case "maybe":
-                return Color.parseColor("#FFFF00");
-            case "no":
-                return Color.parseColor("#FF0000");
-            default:
-                return Color.TRANSPARENT;
+        if (status == null) return Color.TRANSPARENT;
+
+        String normalizedStatus = status.trim().toLowerCase();
+
+        if (normalizedStatus.equals("yes") ||
+                normalizedStatus.equals("light")) {
+            return Color.parseColor("#A5D6A7"); // green
         }
+        else if (normalizedStatus.equals("maybe") ||
+                normalizedStatus.equals("second") ||
+                normalizedStatus.equals("first") ||
+                normalizedStatus.equals("possible")) {
+            return Color.parseColor("#FFF59D"); // yellow
+        }
+        else if (normalizedStatus.equals("no")) {
+            return Color.parseColor("#EF9A9A"); // red
+        }
+
+        return Color.TRANSPARENT;
     }
 }
