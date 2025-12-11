@@ -4,4 +4,16 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="tabs_for_navigation">Tabs for navigation</string>
+    <string-array name="days_of_week">
+        <item>Mon</item>
+        <item>Tue</item>
+        <item>Wed</item>
+        <item>Thu</item>
+        <item>Fri</item>
+        <item>Sat</item>
+        <item>Sun</item>
+    </string-array>
+    <string name="status_light_on">ON</string>
+    <string name="status_light_off">OFF</string>
+    <string name="status_possible_shutdown">MAYBE</string>
 </resources>
