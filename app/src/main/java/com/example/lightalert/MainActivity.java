@@ -1,10 +1,13 @@
 package com.example.lightalert;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.lightalert.adapters.ViewPagerAdapter;
 import com.example.lightalert.data.ScheduleDataLoader;
+import com.example.lightalert.data.WebScheduleLoader;
 import com.example.lightalert.fragments.DayFragment;
 import com.example.lightalert.data.Schedule;
 
@@ -45,6 +48,30 @@ public class MainActivity extends AppCompatActivity {
         schedule = new Schedule(jsonSchedule);
 
         setupViewPager();
+
+        WebScheduleLoader.loadSchedule(new WebScheduleLoader.ScheduleCallback() {
+            @Override
+            public void onLoaded(String todayData, String tomorrowData) {
+
+                runOnUiThread(() -> {
+
+                    Log.d("LightAlert", "Today: " + todayData);
+                    Log.d("LightAlert", "Tomorrow: " + tomorrowData);
+
+                    Toast.makeText(MainActivity.this,
+                            "Data received!\nToday: " + todayData,
+                            Toast.LENGTH_LONG).show();
+                });
+            }
+
+            @Override
+            public void onError(String error) {
+                runOnUiThread(() -> {
+                    Log.e("LightAlert", "Error: " + error);
+                    Toast.makeText(MainActivity.this, "Error: " + error, Toast.LENGTH_LONG).show();
+                });
+            }
+        });
     }
 
     private void setupViewPager() {
